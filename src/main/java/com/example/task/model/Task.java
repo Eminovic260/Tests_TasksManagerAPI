@@ -8,8 +8,8 @@ public class Task {
     private String description;
     private String status;
 
-    public Task(String id, String description, String status) {
-        this.id = id;
+    public Task(String description) {
+        this.id = UUID.randomUUID().toString();
         this.description = description;
         this.status = "en cours";
     }
