@@ -1,9 +1,17 @@
 package com.example.task.service;
-
+import com.example.task.model.Task;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class TaskService {
-    /// TO BE IMPLEMENTED
-    /// Handle and manage a list of Task objects
+    private List<Task> tasks = new ArrayList<>();
+
+
+    public addTask (String description){
+
+    }
+
 }
