@@ -1,17 +1,48 @@
 package com.example.task.controller;
 
 import com.example.task.service.TaskService;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+
 @SpringBootTest
 @AutoConfigureMockMvc
 public class TaskControllerIntegrationTests {
+
     @Autowired
     private MockMvc mockMvc;
 
     @Autowired
-    private TaskService taskService; // real TaskService object automatically injected in TaskController instance
+    private TaskService taskService;
+
+    @Test
+    void getTasks_should_return_tasks_from_real_service() throws Exception {
+        taskService.addTask("Tâche intégration");
+
+        mockMvc.perform(get("/tasks"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$[0].description").value("Tâche intégration"));
+    }
+
+    @Test
+    void getTasks_should_return_empty_list_when_no_tasks() throws Exception {
+        mockMvc.perform(get("/tasks"))
+            .andExpect(status().isOk())
+            .andExpect(content().json("[]"));
+    }
+
+    @Test
+    void hello_should_return_message() throws Exception {
+        mockMvc.perform(get("/tasks/hello"))
+            .andExpect(status().isOk())
+            .andExpect(content().string("Welcome to the Task Manager API!"));
+    }
 }
