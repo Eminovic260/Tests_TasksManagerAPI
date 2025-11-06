@@ -4,9 +4,7 @@ import java.util.List;
 
 import com.example.task.service.TaskService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 
@@ -27,5 +25,36 @@ public class TaskController {
     public ResponseEntity<String> hello() {
         return ResponseEntity.ok("Welcome to the Task Manager API!");
     }
+
+    @PostMapping
+    public ResponseEntity<Task> createTask(@RequestBody Task task) {
+        Task newTask = taskService.addTask(task.getDescription());
+        return ResponseEntity.ok(newTask);
+    }
+
+    @DeleteMapping("/{taskId}")
+    public ResponseEntity<Void> deleteTask(@PathVariable String taskId) {
+        boolean deleted = taskService.deleteTask(taskId);
+        if (deleted) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+    @PutMapping("/{taskId}/complete")
+    public ResponseEntity<Task> completeTask(@PathVariable String taskId) {
+        boolean success = taskService.completeTask(taskId);
+        if (success) {
+            // Retourner la tâche mise à jour
+            Task updatedTask = taskService.getTasks().stream()
+                .filter(t -> t.getId().equals(taskId))
+                .findFirst()
+                .orElse(null);
+            return ResponseEntity.ok(updatedTask);
+        } else {
+            return ResponseEntity.notFound().build(); // id non trouvé
+        }
+    }
+
 
 }

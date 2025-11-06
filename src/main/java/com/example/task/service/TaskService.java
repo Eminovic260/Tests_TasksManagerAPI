@@ -10,10 +10,10 @@ import java.util.List;
 public class TaskService {
     private List<Task> tasks = new ArrayList<>();
 
-  /*  public TaskService() {
+    public TaskService() {
         addTask("Tâche 1");
         addTask("Tâche 2");
-    }*/
+    }
     public Task addTask(String description) {
         Task task = new Task(description);
         tasks.add(task);

@@ -8,10 +8,11 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -23,13 +24,18 @@ public class TaskControllerIntegrationTests {
     @Autowired
     private TaskService taskService;
 
+    @BeforeEach
+    void clean() {
+        taskService.getTasks().clear();
+    }
+
     @Test
     void getTasks_should_return_tasks_from_real_service() throws Exception {
         taskService.addTask("Tâche intégration");
 
         mockMvc.perform(get("/tasks"))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$[0].description").value("Tâche intégration"));
+            .andExpect(jsonPath("$[0].description").value("Tache intégration"));
     }
 
     @Test
